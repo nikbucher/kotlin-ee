@@ -1,8 +1,6 @@
 .*
 !.gitignore
 !.editorconfig
-
-*.jar
-*.class
+/build/
 *.log
 *~
