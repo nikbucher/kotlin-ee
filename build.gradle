@@ -1,20 +1,65 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath "org.wildfly.swarm:wildfly-swarm-gradle-plugin:$wildflySwarmVersion"
+  }
+}
+
 plugins {
-  id "org.jetbrains.kotlin.jvm" version "1.1.61"
+  id "java"
+  id "org.jetbrains.kotlin.jvm" version "1.2.21"
+  id "io.spring.dependency-management" version "1.0.4.RELEASE"
+  id "application"
+}
+
+apply {
+  plugin("wildfly-swarm")
 }
 
 repositories {
   jcenter()
+  maven {
+    url "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/"
+  }
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.wildfly.swarm:bom:$wildflySwarmVersion"
+  }
 }
 
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8"
-  compile "org.jetbrains.kotlin:kotlin-stdlib"
   compile "org.jetbrains.kotlin:kotlin-reflect"
-  testCompile "org.jetbrains.kotlin:kotlin-test"
-  testCompile "org.jetbrains.kotlin:kotlin-test-junit"
+  compile "org.wildfly.swarm:jaxrs"
+  //testCompile "org.jetbrains.kotlin:kotlin-test"
+  //testCompile "org.jetbrains.kotlin:kotlin-test-junit"
   // testCompile 'junit:junit:4.12'
+  testCompile "org.wildfly.swarm:arquillian"
+  testCompile "org.jboss.arquillian.junit:arquillian-junit-container"
+  testCompile "org.jboss.arquillian.graphene:graphene-webdriver:2.1.0.Final@pom"
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+}
+
+mainClassName = "MainKt"
+
+/*
+swarm {
+//  mainClassName = "MainKt"
+  properties {
+    swarm.http.port = 8181
+  }
+}
+*/
 wrapper {
-  gradleVersion = "4.3.1"
+  gradleVersion = "4.5"
 }

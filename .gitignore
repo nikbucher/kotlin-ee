@@ -2,5 +2,6 @@
 !.gitignore
 !.editorconfig
 /build/
+/out/
 *.log
 *~
